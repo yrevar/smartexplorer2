@@ -3,6 +3,9 @@
 *Tasks*
 
   - Test App 
+
   - App launches on plain text, make changes so that it launches on Url 
+
   - App launches on plain text, refer sticky note code to make it display text parsed. 
+
   - Display nfc url received  
