@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.NFC"></uses-permission>
 
     <application android:icon="@drawable/icon" android:label="@string/app_name">
-        <activity android:name=".SmartExplorerNoteReaderActivity"
+        <activity android:name=".StickyNotesActivity"
                   android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
