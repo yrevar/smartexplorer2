@@ -40,7 +40,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 
-public class SmartExplorerNoteReaderActivity extends Activity {
+public class StickyNotesActivity extends Activity {
     private static final String TAG = "stickynotes";
     private boolean mResumed = false;
     private boolean mWriteMode = false;
@@ -129,7 +129,7 @@ public class SmartExplorerNoteReaderActivity extends Activity {
         @Override
         public void afterTextChanged(Editable arg0) {
             if (mResumed) {
-                mNfcAdapter.enableForegroundNdefPush(SmartExplorerNoteReaderActivity.this, getNoteAsNdef());
+                mNfcAdapter.enableForegroundNdefPush(StickyNotesActivity.this, getNoteAsNdef());
             }
         }
     };
@@ -141,7 +141,7 @@ public class SmartExplorerNoteReaderActivity extends Activity {
             disableNdefExchangeMode();
             enableTagWriteMode();
 
-            new AlertDialog.Builder(SmartExplorerNoteReaderActivity.this).setTitle("Touch tag to write")
+            new AlertDialog.Builder(StickyNotesActivity.this).setTitle("Touch tag to write")
                     .setOnCancelListener(new DialogInterface.OnCancelListener() {
                         @Override
                         public void onCancel(DialogInterface dialog) {
@@ -215,7 +215,7 @@ public class SmartExplorerNoteReaderActivity extends Activity {
     }
 
     private void enableNdefExchangeMode() {
-        mNfcAdapter.enableForegroundNdefPush(SmartExplorerNoteReaderActivity.this, getNoteAsNdef());
+        mNfcAdapter.enableForegroundNdefPush(StickyNotesActivity.this, getNoteAsNdef());
         mNfcAdapter.enableForegroundDispatch(this, mNfcPendingIntent, mNdefExchangeFilters, null);
     }
 
