@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
+	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry kind="lib" path="/home/yagneshr/workspace/SmartExplorer/libs/ndeftools-1.2.3.jar"/>
+	<classpathentry kind="lib" path="/home/yagneshr/workspace/SmartExplorer/libs/ndeftools-util.jar"/>
+	<classpathentry kind="lib" path="libs/ndeftools-1.2.3.jar"/>
+	<classpathentry kind="lib" path="libs/ndeftools-util.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="output" path="bin/classes"/>
+</classpath>
