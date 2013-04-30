@@ -49,7 +49,7 @@ import java.io.IOException;
  * 
  * Boilerplate activity selector.
  * 
- * 
+ * @author Thomas Rorvik Skjolberg
  *
  */
 
