@@ -32,6 +32,24 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
             
+            <!-- Any Uri handling filter -->
+            
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http"
+                      android:host="*.*"
+                      android:pathPrefix="/*.html" />
+             </intent-filter>
+            
+            <!--  ***currently trying this one for wifi-uri***
+            
+            	  <intent-filter>
+                     <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                     <category android:name="android.intent.category.DEFAULT" />
+                     <data android:scheme="wifi" />
+                  </intent-filter>  -->
+            
      <!--        <intent-filter android:priority="9001">
                 <action android:name="android.nfc.action.TAG_DISCOVERED" />
                 <category android:name="android.intent.category.default" />
