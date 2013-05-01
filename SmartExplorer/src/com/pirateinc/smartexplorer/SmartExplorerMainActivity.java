@@ -41,6 +41,8 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -60,7 +62,7 @@ public class SmartExplorerMainActivity extends Activity {
 	private boolean mWriteMode = false;
     NfcAdapter mNfcAdapter;
     EditText mNote;
-
+    
     PendingIntent mNfcPendingIntent;
     IntentFilter[] mWriteTagFilters;
     IntentFilter[] mNdefExchangeFilters;
@@ -75,6 +77,17 @@ public class SmartExplorerMainActivity extends Activity {
 		findViewById(R.id.write_tag).setOnClickListener(mTagWriter);
 		mNote = ((EditText) findViewById(R.id.note));
         mNote.addTextChangedListener(mTextWatcher);
+        
+        Button WiFibtn = (Button) findViewById(R.id.button1);
+        WiFibtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent WiFibtnintent = new Intent(v.getContext(), WiFiActivity.class);
+				startActivityForResult(WiFibtnintent, 0);
+				
+			}
+		});
 	
 
         // Handle all of our received NFC intents in this activity.

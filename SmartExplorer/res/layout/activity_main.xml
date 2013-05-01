@@ -5,7 +5,14 @@
     android:layout_height="fill_parent"
     >
     <LinearLayout android:layout_height="wrap_content" android:layout_width="match_parent" android:id="@+id/linearLayout1">
-        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/write_tag" android:text="Write to Tag"></Button>
+        <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/write_tag" android:text="@string/write_to_tag"></Button>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wifi" />
+
     </LinearLayout>
-<EditText android:layout_width="fill_parent" android:id="@+id/note" android:layout_height="fill_parent" android:gravity="top" android:text="Text to Send"></EditText>
+<EditText android:layout_width="fill_parent" android:id="@+id/note" android:layout_height="fill_parent" android:gravity="top" android:text="Text to Send" android:inputType="text"></EditText>
 </LinearLayout>
