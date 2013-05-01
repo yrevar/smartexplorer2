@@ -16,6 +16,6 @@
 
   - ~~Write hardcoded wifi ssid and key (one of your apartment wifi) and test WifiConfiguration and WifiManager class how it works.~~ 
 
-  - ~~Prepare WifiSetup function which takes ssid and key as input argument in ur activity and it does setup for you.~~  
+  - ~~Prepare WifiSetup function which takes ssid and key as input argument in ur activity and it does setup for you.~~
 
   - Add wifi para in textual format in nfc tag, proprietary format, e.g. ssid="nwname", key="key123". And write simple parsing function in ur activity. Then pass to WifiSetup Function.  
