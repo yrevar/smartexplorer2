@@ -17,8 +17,8 @@ import android.widget.EditText;
 
 public class WiFiActivity extends Activity {
 
-	String nwSSID ;
-	String nwPass ;
+	String nwSSID = "";
+	String nwPass = "";
 	EditText wifiSSID ;
 	EditText wifiPass ;
 	Button submit;
@@ -32,6 +32,8 @@ public class WiFiActivity extends Activity {
 
 		wifiSSID = ((EditText) findViewById(R.id.editText1));
 		wifiPass = ((EditText) findViewById(R.id.editText2));
+//		wifiSSID.setText(nwSSID);
+//		wifiPass.setText(nwPass);
 
 		submit = (Button)findViewById(R.id.submit);
 		writeTagbtn = (Button)findViewById(R.id.write_tag);
@@ -93,6 +95,16 @@ public class WiFiActivity extends Activity {
 
 
 	}
+	
+	 @Override
+	    protected void onResume() {
+	        super.onResume();
+	 }
+	 
+	 @Override
+	    protected void onPause() {
+	        super.onPause();
+	    }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
