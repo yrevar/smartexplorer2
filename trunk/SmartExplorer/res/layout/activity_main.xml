@@ -14,5 +14,5 @@
             android:text="@string/wifi" />
 
     </LinearLayout>
-<EditText android:layout_width="fill_parent" android:id="@+id/note" android:layout_height="fill_parent" android:gravity="top" android:text="Text to Send" android:inputType="text"></EditText>
+<EditText android:layout_width="fill_parent" android:id="@+id/note" android:layout_height="fill_parent" android:gravity="top" android:text="@string/text_to_send" android:inputType="text"></EditText>
 </LinearLayout>
