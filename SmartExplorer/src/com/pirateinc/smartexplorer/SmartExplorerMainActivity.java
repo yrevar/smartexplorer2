@@ -161,6 +161,8 @@ public class SmartExplorerMainActivity extends Activity {
                         enableNdefExchangeMode();
                     }
                 }).create().show();
+        
+        updateWifiPara = false;
         }
     }
 
