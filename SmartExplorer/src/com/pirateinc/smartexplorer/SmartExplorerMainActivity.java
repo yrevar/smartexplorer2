@@ -62,6 +62,10 @@ public class SmartExplorerMainActivity extends Activity {
 	private boolean mWriteMode = false;
     NfcAdapter mNfcAdapter;
     EditText mNote;
+    String nwSSID = "Default";
+	String nwPass = "1234";
+	Boolean updateWifiPara = false;
+	
     
     PendingIntent mNfcPendingIntent;
     IntentFilter[] mWriteTagFilters;
@@ -84,7 +88,7 @@ public class SmartExplorerMainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent WiFibtnintent = new Intent(v.getContext(), WiFiActivity.class);
-				startActivityForResult(WiFibtnintent, 0);
+				startActivityForResult(WiFibtnintent, 1);
 				
 			}
 		});
@@ -114,6 +118,23 @@ public class SmartExplorerMainActivity extends Activity {
     	startActivity(intent);
     }
     
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+    	  if (requestCode == 1) {
+
+    	     if(resultCode == RESULT_OK){      
+    	         nwSSID=data.getStringExtra("nwSSID");
+    	         nwPass=data.getStringExtra("nwPass");
+    	         
+    	        toast("From Wifi Para:" + "ssid=" + nwSSID + ", pass=" + nwPass);
+    	        updateWifiPara = true;
+    	     }
+    	     if (resultCode == RESULT_CANCELED) {    
+    	         //Write your code if there's no result
+    	     }
+    	  }
+    	}//onActivityResult
+    
     @Override
     protected void onResume() {
         super.onResume();
@@ -126,6 +147,21 @@ public class SmartExplorerMainActivity extends Activity {
             setIntent(new Intent()); // Consume this intent.
         }
         enableNdefExchangeMode();
+        
+        if(updateWifiPara == true) {
+     	// Write to a tag for as long as the dialog is shown.
+        disableNdefExchangeMode();
+        enableTagWriteMode();
+
+        new AlertDialog.Builder(SmartExplorerMainActivity.this).setTitle("Touch tag to write")
+                .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        disableTagWriteMode();
+                        enableNdefExchangeMode();
+                    }
+                }).create().show();
+        }
     }
 
     @Override
@@ -133,6 +169,7 @@ public class SmartExplorerMainActivity extends Activity {
         super.onPause();
         mResumed = false;
         mNfcAdapter.disableForegroundNdefPush(this);
+        updateWifiPara = false;
     }
 
     @Override
@@ -145,8 +182,10 @@ public class SmartExplorerMainActivity extends Activity {
 
         // Tag writing mode
         if (mWriteMode && NfcAdapter.ACTION_TAG_DISCOVERED.equals(intent.getAction())) {
-            Tag detectedTag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
-            writeTag(getNoteAsNdef(), detectedTag);
+            Tag detectedTag = intent.getParcelableExtra(
+            		NfcAdapter.EXTRA_TAG);
+            //writeTag(getNoteAsNdef(), detectedTag);
+            writeTag(getWifiPAraAsNdef(), detectedTag);
         }
     }
 
@@ -169,6 +208,17 @@ public class SmartExplorerMainActivity extends Activity {
     
     private NdefMessage getNoteAsNdef() {
         byte[] textBytes = mNote.getText().toString().getBytes();
+        NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+                new byte[] {}, textBytes);
+        return new NdefMessage(new NdefRecord[] {
+            textRecord
+        });
+    }
+    
+    private NdefMessage getWifiPAraAsNdef() {
+    
+    	String wifiParaFormat = nwSSID  + ";" + nwPass + ";";
+        byte[] textBytes = wifiParaFormat.getBytes();
         NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
                 new byte[] {}, textBytes);
         return new NdefMessage(new NdefRecord[] {

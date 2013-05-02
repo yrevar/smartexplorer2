@@ -86,5 +86,7 @@
     <string name="enter_password_">Enter Password :</string>
     <string name="wifi">WiFi</string>
     <string name="write_to_tag">Write to Tag</string>
+    <string name="connect">Connect</string>
+    <string name="text_to_send">Text to Send</string>
 
 </resources>

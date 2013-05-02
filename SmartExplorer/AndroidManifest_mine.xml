@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.pirateinc.smartexplorer"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="17" />
+
+    <uses-permission android:name="android.permission.NFC"> </uses-permission>
+    <uses-feature android:name="android.hardware.nfc"> </uses-feature>
+    
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"> </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"> </uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"> </uses-permission>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.pirateinc.smartexplorer.SmartExplorerMainActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Handle notes detected from outside our application -->
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+
+            <!-- Any Uri handling filter -->
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data
+                    android:host="*.*"
+                    android:pathPrefix="/*.html"
+                    android:scheme="http" />
+            </intent-filter>
+
+            <!--
+                  ***currently trying this one for wifi-uri***
+            -->
+            
+        	<intent-filter>
+                     <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                     <category android:name="android.intent.category.DEFAULT" />
+                     <data android:mimeType="text/c_wifi" />
+            </intent-filter>
+            
+
+
+            <!--
+                 <intent-filter android:priority="9001">
+                <action android:name="android.nfc.action.TAG_DISCOVERED" />
+                <category android:name="android.intent.category.default" />
+                <data android:scheme="http" android:host="google.com" android:pathPrefix="/index.html" />
+            </intent-filter>
+            -->
+
+        </activity>
+        
+        <activity
+            android:name="com.pirateinc.smartexplorer.WiFiActivity"
+            android:label="@string/title_activity_wi_fi" >
+        </activity>
+    </application>
+
+</manifest>
