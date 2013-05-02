@@ -190,7 +190,7 @@ public class SmartExplorerMainActivity extends Activity {
     }
 
     private void promptForContent(final NdefMessage msg) {
-        new AlertDialog.Builder(this).setTitle("Go Msg: \"" + new String(msg.getRecords()[0].getPayload()) + "\"")
+        new AlertDialog.Builder(this).setTitle("Got Msg: \"" + new String(msg.getRecords()[0].getPayload()) + "\"")
             .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
