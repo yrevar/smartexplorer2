@@ -35,7 +35,7 @@ public class WiFiActivity extends Activity {
 //		wifiSSID.setText(nwSSID);
 //		wifiPass.setText(nwPass);
 
-		submit = (Button)findViewById(R.id.submit);
+//		submit = (Button)findViewById(R.id.submit);
 		writeTagbtn = (Button)findViewById(R.id.write_tag);
 
 		mWifiManager = (WifiManager)this.getSystemService(Context.WIFI_SERVICE);
@@ -58,39 +58,53 @@ public class WiFiActivity extends Activity {
 			}
 		});
 
-		submit.setOnClickListener(new OnClickListener() {
+	//	submit.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View v) {
+	//		@Override
+	//		public void onClick(View v) {
 
-				nwSSID = wifiSSID.getText().toString();
-				nwPass = wifiPass.getText().toString();
+				//nwSSID = wifiSSID.getText().toString();
+				//nwPass = wifiPass.getText().toString();
+				
+		protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+			
+			if (requestCode == 1) {
 
-				WifiConfiguration mConf = new WifiConfiguration();
+	    	     if(resultCode == RESULT_OK)  {      
+	    	         nwSSID=data.getStringExtra("tagSSID");
+	    	         nwPass=data.getStringExtra("tagPass");
+	    	         
+	    	         WifiConfiguration mConf = new WifiConfiguration();
 
-				mConf.SSID = "\"" + nwSSID + "\"";
-				mConf.preSharedKey = "\"" + nwPass + "\"";
+	 				mConf.SSID = "\"" + nwSSID + "\"";
+	 				mConf.preSharedKey = "\"" + nwPass + "\"";
 
 
-				System.out.println("mConf is- " + mConf);
-				mWifiManager.addNetwork(mConf);
+	 				System.out.println("mConf is- " + mConf);
+	 				mWifiManager.addNetwork(mConf);
 
-				List<WifiConfiguration> list = new ArrayList<WifiConfiguration>();
-				list = mWifiManager.getConfiguredNetworks();
-				System.out.println("list size- " + list.size());
-				for( WifiConfiguration i : list ) {
-					if(i.SSID != null && i.SSID.equals("\"" + nwSSID + "\"")) {
-						mWifiManager.disconnect();
-						mWifiManager.enableNetwork(i.networkId, true);
-						mWifiManager.reconnect();               
+	 				List<WifiConfiguration> list = new ArrayList<WifiConfiguration>();
+	 				list = mWifiManager.getConfiguredNetworks();
+	 				System.out.println("list size- " + list.size());
+	 				for( WifiConfiguration i : list ) {
+	 					if(i.SSID != null && i.SSID.equals("\"" + nwSSID + "\"")) {
+	 						mWifiManager.disconnect();
+	 						mWifiManager.enableNetwork(i.networkId, true);
+	 						mWifiManager.reconnect();               
 
-						break;
-					}           
+	 						break;
+	 					}
+	    	         
+	    	     }   
+	    	}         
+		}
+				
+				           
 				}
 
 
-			}
-		});
+//			}
+//		});
 
 
 
