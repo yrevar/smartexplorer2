@@ -22,8 +22,11 @@ package com.pirateinc.smartexplorer;
 
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -102,7 +105,7 @@ public class SmartExplorerMainActivity extends Activity {
         // Intent filters for reading a note from a tag.
         IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         try {
-            ndefDetected.addDataType("text/plain");
+            ndefDetected.addDataType("text/c_wifi");
         } catch (MalformedMimeTypeException e) { }
         mNdefExchangeFilters = new IntentFilter[] { ndefDetected };
 
@@ -192,13 +195,11 @@ public class SmartExplorerMainActivity extends Activity {
         }
     }
 
-    private void promptForContent(final NdefMessage msg) {
+    @SuppressLint("NewApi")
+	private void promptForContent(final NdefMessage msg) {
     	
     	String tagSSID;
     	String tagPass;
-    	
-    	toast("Hello");
-    	
     	
 //    	if (msg.getRecords()[0].equals(wifitextRecord)) {
     		
@@ -208,20 +209,45 @@ public class SmartExplorerMainActivity extends Activity {
     	tagSSID = split[0];
     	tagPass = split[1];
     	
-    	new AlertDialog.Builder(this).setTitle("Connecting ssid: \"" + tagSSID + "\", pass: \"" + tagPass + "\"")
-       /* .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
+    	/*new AlertDialog.Builder(this).setTitle("Connecting ssid: \"" + tagSSID + "\", pass: \"" + tagPass + "\"")
+        .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 String body = new String(msg.getRecords()[0].getPayload());
                 setNoteBody(body);
             }
-        })*/
+        })
         .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
                 
             }
         }).show();
+    	*/
+    	
+    	// Prepare intent which is triggered if the
+    	// notification is selected
+
+    	Intent intent = new Intent(this, SmartExplorerMainActivity.class);
+    	PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+    	// Build notification
+    	// Actions are just fake
+    	Notification noti = new Notification.Builder(this)
+    	        .setContentTitle("SmartExplorer wifi nw connected")
+    	        .setContentText("SSID: " + tagSSID)
+    	        .setSmallIcon(R.drawable.ic_launcher)
+    	        .setContentIntent(pIntent)
+    	        .addAction(R.drawable.ic_launcher, "Disconnect", pIntent)
+    	        .addAction(R.drawable.ic_launcher, "Program", pIntent).build();
+    	    
+    	  
+    	NotificationManager notificationManager = 
+    	  (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+    	// Hide the notification after its selected
+    	noti.flags |= Notification.FLAG_AUTO_CANCEL;
+
+    	notificationManager.notify(0, noti);
     	
     	Intent WiFibtnintent = new Intent(SmartExplorerMainActivity.this, WiFiActivity.class);
     	
@@ -236,7 +262,7 @@ public class SmartExplorerMainActivity extends Activity {
     
     private NdefMessage getNoteAsNdef() {
         byte[] textBytes = mNote.getText().toString().getBytes();
-        NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+        NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/c_wifi".getBytes(),
                 new byte[] {}, textBytes);
         return new NdefMessage(new NdefRecord[] {
             textRecord
@@ -247,7 +273,7 @@ public class SmartExplorerMainActivity extends Activity {
     
     	String wifiParaFormat = nwSSID  + ";" + nwPass;
         byte[] textBytes = wifiParaFormat.getBytes();
-        NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+        NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/c_wifi".getBytes(),
                 new byte[] {}, textBytes);
         return new NdefMessage(new NdefRecord[] {
             textRecord
