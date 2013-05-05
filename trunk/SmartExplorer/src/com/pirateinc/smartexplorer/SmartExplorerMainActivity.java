@@ -64,8 +64,6 @@ public class SmartExplorerMainActivity extends Activity {
     EditText mNote;
     String nwSSID = "Default";
 	String nwPass = "1234";
-	String tagSSID;
-	String tagPass;
 	
 	Boolean updateWifiPara = false;
 	
@@ -196,35 +194,44 @@ public class SmartExplorerMainActivity extends Activity {
 
     private void promptForContent(final NdefMessage msg) {
     	
-    	if (msg.getRecords()[0].equals(wifitextRecord)) {
+    	String tagSSID;
+    	String tagPass;
+    	
+    	toast("Hello");
+    	
+    	
+//    	if (msg.getRecords()[0].equals(wifitextRecord)) {
+    		
     
     	String wificredentialString = new String(msg.getRecords()[0].getPayload());
     	String[] split = wificredentialString.split(";");
     	tagSSID = split[0];
     	tagPass = split[1];
     	
-    	Intent sendIntent = new Intent();
-    	sendIntent.putExtra("tagSSID", tagSSID);
-    	sendIntent.putExtra("tagPass", tagPass);
-    	setResult(RESULT_OK, sendIntent);
-    	finish();
-    	    	
-    	}
+    	new AlertDialog.Builder(this).setTitle("Connecting ssid: \"" + tagSSID + "\", pass: \"" + tagPass + "\"")
+       /* .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                String body = new String(msg.getRecords()[0].getPayload());
+                setNoteBody(body);
+            }
+        })*/
+        .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                
+            }
+        }).show();
     	
-    	new AlertDialog.Builder(this).setTitle("Got Msg: \"" + new String(msg.getRecords()[0].getPayload()) + "\"")
-            .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface arg0, int arg1) {
-                    String body = new String(msg.getRecords()[0].getPayload());
-                    setNoteBody(body);
-                }
-            })
-            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface arg0, int arg1) {
-                    
-                }
-            }).show();
+    	Intent WiFibtnintent = new Intent(SmartExplorerMainActivity.this, WiFiActivity.class);
+    	
+    	WiFibtnintent.putExtra("tagSSID", tagSSID);
+    	WiFibtnintent.putExtra("tagPass", tagPass);
+    	startActivity(WiFibtnintent);
+    	    	
+//    	}
+    	
+    	
     }
     
     private NdefMessage getNoteAsNdef() {
@@ -240,10 +247,10 @@ public class SmartExplorerMainActivity extends Activity {
     
     	String wifiParaFormat = nwSSID  + ";" + nwPass;
         byte[] textBytes = wifiParaFormat.getBytes();
-        wifitextRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/c_wifi".getBytes(),
+        NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
                 new byte[] {}, textBytes);
         return new NdefMessage(new NdefRecord[] {
-            wifitextRecord
+            textRecord
         });
     }
 
