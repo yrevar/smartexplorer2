@@ -64,12 +64,15 @@ public class SmartExplorerMainActivity extends Activity {
     EditText mNote;
     String nwSSID = "Default";
 	String nwPass = "1234";
+	String tagSSID;
+	String tagPass;
+	
 	Boolean updateWifiPara = false;
 	
-    
-    PendingIntent mNfcPendingIntent;
+	PendingIntent mNfcPendingIntent;
     IntentFilter[] mWriteTagFilters;
     IntentFilter[] mNdefExchangeFilters;
+    NdefRecord wifitextRecord;
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -98,7 +101,7 @@ public class SmartExplorerMainActivity extends Activity {
         mNfcPendingIntent = PendingIntent.getActivity(this, 0,
                 new Intent(this, getClass()).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 
-        // Intent filters for reading a note from a tag or exchanging over p2p.
+        // Intent filters for reading a note from a tag.
         IntentFilter ndefDetected = new IntentFilter(NfcAdapter.ACTION_NDEF_DISCOVERED);
         try {
             ndefDetected.addDataType("text/plain");
@@ -192,7 +195,23 @@ public class SmartExplorerMainActivity extends Activity {
     }
 
     private void promptForContent(final NdefMessage msg) {
-        new AlertDialog.Builder(this).setTitle("Got Msg: \"" + new String(msg.getRecords()[0].getPayload()) + "\"")
+    	
+    	if (msg.getRecords()[0].equals(wifitextRecord)) {
+    
+    	String wificredentialString = new String(msg.getRecords()[0].getPayload());
+    	String[] split = wificredentialString.split(";");
+    	tagSSID = split[0];
+    	tagPass = split[1];
+    	
+    	Intent sendIntent = new Intent();
+    	sendIntent.putExtra("tagSSID", tagSSID);
+    	sendIntent.putExtra("tagPass", tagPass);
+    	setResult(RESULT_OK, sendIntent);
+    	finish();
+    	    	
+    	}
+    	
+    	new AlertDialog.Builder(this).setTitle("Got Msg: \"" + new String(msg.getRecords()[0].getPayload()) + "\"")
             .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface arg0, int arg1) {
@@ -219,12 +238,12 @@ public class SmartExplorerMainActivity extends Activity {
     
     private NdefMessage getWifiPAraAsNdef() {
     
-    	String wifiParaFormat = nwSSID  + ";" + nwPass + ";";
+    	String wifiParaFormat = nwSSID  + ";" + nwPass;
         byte[] textBytes = wifiParaFormat.getBytes();
-        NdefRecord textRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/plain".getBytes(),
+        wifitextRecord = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, "text/c_wifi".getBytes(),
                 new byte[] {}, textBytes);
         return new NdefMessage(new NdefRecord[] {
-            textRecord
+            wifitextRecord
         });
     }
 
