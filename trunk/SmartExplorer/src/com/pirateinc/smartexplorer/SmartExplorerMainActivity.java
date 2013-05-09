@@ -28,10 +28,13 @@ import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.IntentFilter.MalformedMimeTypeException;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -50,6 +53,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 /**
  * 
  * Boilerplate activity selector.
@@ -74,11 +79,14 @@ public class SmartExplorerMainActivity extends Activity {
     IntentFilter[] mWriteTagFilters;
     IntentFilter[] mNdefExchangeFilters;
     NdefRecord wifitextRecord;
+    WifiManager mWifiManager;
+
     
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
+        mWifiManager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         
 		setContentView(R.layout.activity_main);
@@ -147,7 +155,8 @@ public class SmartExplorerMainActivity extends Activity {
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(getIntent().getAction())) {
             NdefMessage[] messages = getNdefMessages(getIntent());
             byte[] payload = messages[0].getRecords()[0].getPayload();
-            setNoteBody(new String(payload));
+            promptForContent(messages[0]);
+//            setNoteBody(new String(payload));
             setIntent(new Intent()); // Consume this intent.
         }
         enableNdefExchangeMode();
@@ -201,6 +210,7 @@ public class SmartExplorerMainActivity extends Activity {
     	String tagSSID;
     	String tagPass;
     	
+    	
 //    	if (msg.getRecords()[0].equals(wifitextRecord)) {
     		
     
@@ -249,11 +259,12 @@ public class SmartExplorerMainActivity extends Activity {
 
     	notificationManager.notify(0, noti);
     	
-    	Intent WiFibtnintent = new Intent(SmartExplorerMainActivity.this, WiFiActivity.class);
+    	ConnectWifi(tagSSID, tagPass);
+    	/*Intent WiFibtnintent = new Intent(SmartExplorerMainActivity.this, WiFiActivity.class);
     	
     	WiFibtnintent.putExtra("tagSSID", tagSSID);
     	WiFibtnintent.putExtra("tagPass", tagPass);
-    	startActivity(WiFibtnintent);
+    	startActivity(WiFibtnintent);*/
     	    	
 //    	}
     	
@@ -409,6 +420,31 @@ public class SmartExplorerMainActivity extends Activity {
             }
         }
     };
+    
+    private void ConnectWifi(String inSSID, String inPass) {
+    	
+		WifiConfiguration mConf = new WifiConfiguration();
+
+		mConf.SSID = "\"" + inSSID + "\"";
+		mConf.preSharedKey = "\"" + inPass + "\"";
+
+		System.out.println("mConf is- " + mConf);
+		mWifiManager.addNetwork(mConf);
+
+		List<WifiConfiguration> list = new ArrayList<WifiConfiguration>();
+		list = mWifiManager.getConfiguredNetworks();
+		System.out.println("list size- " + list.size());
+		for (WifiConfiguration i : list) {
+			if (i.SSID != null && i.SSID.equals("\"" + inSSID + "\"")) {
+				mWifiManager.disconnect();
+				mWifiManager.enableNetwork(i.networkId, true);
+				mWifiManager.reconnect();
+
+				break;
+			}
+
+		}
+	}
 
     private View.OnClickListener mTagWriter = new View.OnClickListener() {
         @Override
